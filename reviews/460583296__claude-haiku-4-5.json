@@ -1,0 +1,35 @@
+{
+  "findings": [
+    {
+      "severity": "major",
+      "category": "accident",
+      "summary": "The seller explicitly discloses the car was struck on the right rear side panel, contradicting the structured field stating the vehicle is accident-free.",
+      "evidence": "AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER (from seller description); Fahrzeugzustand field states Unfallfrei"
+    }
+  ],
+  "notable_options": [
+    "Navigation system",
+    "LED headlights",
+    "Parking camera system",
+    "Adaptive cruise control",
+    "Heated steering wheel",
+    "Keyless entry",
+    "Android Auto and Apple CarPlay",
+    "Heated front seats",
+    "Sport suspension and sport seats",
+    "All-weather tyres"
+  ],
+  "summary": "This 2024 Ford Focus Turnier ST-Line estate has 85,800 km and one owner, but the seller discloses collision damage to the right rear side panel while simultaneously declaring the car accident-free.",
+  "listing_id": "460583296",
+  "model": "claude-haiku-4-5-20251001",
+  "effort": "high",
+  "source": "text",
+  "prompt_sha": "3428677f",
+  "reviewed_at_utc": "2026-07-15T15:23:04+00:00",
+  "usage": {
+    "input": 6349,
+    "output": 2966,
+    "usd": 0.1059
+  },
+  "raw_text": "{\"findings\":[{\"severity\":\"major\",\"category\":\"accident\",\"summary\":\"The seller explicitly discloses the car was struck on the right rear side panel, contradicting the structured field stating the vehicle is accident-free.\",\"evidence\":\"AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER (from seller description); Fahrzeugzustand field states Unfallfrei\"}],\"notable_options\":[\"Navigation system\",\"LED headlights\",\"Parking camera system\",\"Adaptive cruise control\",\"Heated steering wheel\",\"Keyless entry\",\"Android Auto and Apple CarPlay\",\"Heated front seats\",\"Sport suspension and sport seats\",\"All-weather tyres\"],\"summary\":\"This 2024 Ford Focus Turnier ST-Line estate has 85,800 km and one owner, but the seller discloses collision damage to the right rear side panel while simultaneously declaring the car accident-free.\"}"
+}

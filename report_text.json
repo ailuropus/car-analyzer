@@ -1,0 +1,100 @@
+{
+  "_comment": [
+    "All static prose for the HTML report. Edit freely — no Python changes needed; just re-run `python3 carcache.py report`.",
+    "HTML is allowed in any string (<b>, <i>, <code>, <span class='warn'>…</span>).",
+    "$placeholders are substituted with live values from profile.json / the data, so the text can never drift from the actual scoring.",
+    "Unknown placeholders are left as-is rather than crashing, and any key you delete falls back to a built-in default.",
+    "Available placeholders are listed per block in the sibling `_placeholders` entries."
+  ],
+  "title": "Car Analyzer: final report",
+  "intro": "Data-driven scoring model to assist with selection of exact car model based on matching mobile.de listings.",
+  "_placeholders_header": "$date $n_ranked $n_live $n_total",
+  "header": {
+    "sub": "Updated on $date · $n_ranked cars ranked · $n_live currently live",
+    "live_toggle": "show live only ($n_live of $n_total)"
+  },
+  "sections": {
+    "ranking": {
+      "heading": "Ranking",
+      "sub": "Summary table with cars ordered by the weighted total score"
+    },
+    "methodology": {
+      "heading": "Methodology",
+      "sub": "Details on how each score is calculated · Per-car breakdown for each criteria is below",
+      "details_label": "details"
+    },
+    "criteria_matrix": {
+      "heading": "Scores matrix",
+      "sub": "Raw scores on scale 0–10 per criterion"
+    },
+    "reliability": {
+      "heading": "Reliability",
+      "sub": "Computed from objective independent figures matched to each listing based on <b>TÜV</b> - the model’s Mängelquote for the car’s <b>age band</b> and <b>ADAC</b> - its breakdowns-per-1000 for the car’s <b>registration year</b> (both lower = better). Each value is mapped to 0–10 scale vs a fixed market reference (<b>s</b>), then averaged 50/50. Older band / year ⇒ higher rate ⇒ lower score. ADAC values are official (Pannenstatistik 2025); TÜV values are modelled from the official age-band averages (per-model print table); “–” = no value (scored on the other metric), <span class=\"warn\">n/a</span> = neither (fallback)."
+    },
+    "safety": {
+      "heading": "Safety (Euro NCAP) — informational, not scored",
+      "sub": "Every model here is <b>5-star</b>, and NCAP percentages are <b>not comparable across test years</b> — the protocol gets stricter every few years, so 85% under the 2018 protocol is not worse than 94% under the 2012 one. Scoring this would rank test vintage, not safety; it is shown for reading, with the test year, and deliberately kept out of the ranking."
+    },
+    "condition": {
+      "heading": "Condition",
+      "sub": "Every listing starts at <b>10</b> and loses points for what the seller discloses. This scores the <i>disclosure</i>, not an inspection: a seller who reports a fault is penalised while a silent one is not, and “accident-free not stated” is a paperwork gap rather than evidence of damage."
+    },
+    "equipment": {
+      "heading": "Equipment",
+      "sub": "Scores how many of wishlist items each listing carries (✓) · The Equipment score blends this weighted wishlist ($eq_wishlist_pct) with registration-year recency ($eq_year_pct, the year column) — newer kit is newer-generation even with the same boxes ticked"
+    },
+    "stability": {
+      "heading": "How stable is this ranking?",
+      "sub": "<b>Influence</b> = weight × spread of scores — what each criterion actually contributes to the <i>order</i>. A criterion every car scores the same on cannot rank anyone, whatever its weight; compare <i>share</i> to the nominal weight when tuning. Below it, the same ranking recomputed hundreds of times with randomly perturbed weights: if the winner keeps winning, the decision does not hinge on the exact weights."
+    },
+    "power": {
+      "heading": "Power",
+      "sub": "A proxy for relaxed high-speed cruising, built from engine power plus a bonus for a mid-size estate or a big engine · All parts are added then clamped to 0–10"
+    },
+    "cost": {
+      "heading": "Cost of ownership",
+      "sub": "The composite money score, and the annual running cost underneath it",
+      "composite_heading": "What Cost is made of",
+      "composite_sub": "Asking price ($cost_price_pct) · price rating ($cost_rating_pct) · cash running cost ($cost_running_pct). Each → its own 0–10, then the weighted mean. Depreciation is shown in the bars below but not scored: it is derived from the asking price, which already has its own third. <b>●</b> marks a car whose fuel cost uses <b>measured real-world consumption</b> (spritmonitor.de) instead of the listing's WLTP figure — hover for the litres and sample size. WLTP here runs 2–44% optimistic depending on the engine, so it is not a constant that cancels out.",
+      "tco_heading": "Running cost, by component",
+      "tco_sub": "ADAC-style, $tco_hold_years-yr hold at $tco_annual_km km/yr · Bar width ∝ €/yr · Hover a segment for its value · The Cost score uses the cash part (everything except depreciation)"
+    },
+    "notes": {
+      "heading": "Notes &amp; findings",
+      "sub": "What an LLM read out of each seller's own description, with the quote it relied on. Severity is stated by the reviewer, not guessed from keywords: major and minor feed the Condition score, notes never do.",
+      "checklist_label": "Before viewing, ask / inspect"
+    }
+  },
+  "_placeholders_methodology": "reliability: $rel_midpoint $rel_gain $rel_metric_weights $rel_tuv_mean $rel_tuv_sd $rel_adac_mean $rel_adac_sd $rel_fallback · condition: $pen_accident $pen_acc_unknown $pen_owner $pen_no_service $pen_no_tuv $pen_major $pen_minor $pen_minor_cap · equipment: $eq_wishlist_pct $eq_year_pct $eq_year_worst $eq_year_best $eq_wishlist_list · power: $ab_base $ab_per_ps $ab_segment_bonuses $ab_big_bonus $ab_big_cm3 · cost: $cost_price_best $cost_price_worst $cost_price_pct $cost_rating_pct $cost_running_pct $cost_running_best $cost_running_worst $cost_rating_scale $cost_rating_unknown $tco_hold_years $tco_annual_km $tco_fuel_price $phev_share_pct $phev_kwh $phev_price_kwh $phev_petrol · mileage: $ml_best_km $ml_worst_km · location: $loc_origin $loc_best $loc_worst $loc_fallback",
+  "methodology": {
+    "reliability": {
+      "body": "Two objective figures, matched to this exact listing: the <b>TÜV Mängelquote</b> for the car’s age band and the <b>ADAC breakdowns per 1000</b> for its registration year (both lower = better). Each is mapped to 0–10 against a fixed market reference, then averaged 50/50. Older band/year ⇒ higher rate ⇒ lower score.",
+      "details": "<code>s = clamp($rel_midpoint + $rel_gain·(mean − cell)/sd, 0, 10)</code> per metric, then weighted $rel_metric_weights. Reference (frozen, so ranking a subset never re-scales): TÜV mean $rel_tuv_mean / sd $rel_tuv_sd; ADAC mean $rel_adac_mean / sd $rel_adac_sd. ADAC cells are the <b>official</b> ADAC Pannenstatistik 2025 per-year values; TÜV cells are modelled from the official age-band averages (the per-model table is print-only). A model with no cell for one metric is scored on the other; with neither it gets the neutral fallback $rel_fallback and an <span class=\"warn\">n/a</span> badge."
+    },
+    "condition": {
+      "body": "Starts at <b>10</b> and subtracts what the seller <i>discloses</i>: accident status, extra owners, missing service history or TÜV, and defects mentioned in the listing notes.",
+      "details": "Deductions: accident confirmed −$pen_accident, accident-free not stated −$pen_acc_unknown, −$pen_owner per owner beyond the first, no service history −$pen_no_service, no TÜV −$pen_no_tuv, −$pen_major per disclosed major defect (leak, head gasket, rust-through, engine/gearbox damage), −$pen_minor per minor caution capped at −$pen_minor_cap. Clamped to 0–10. <b>Caveat:</b> this scores <i>disclosure</i>, not an inspection — a seller who honestly reports a fault is penalised while a silent one is not, and “accident-free not stated” is a paperwork gap, not evidence of damage. Defect severities come <i>stated</i> from the LLM findings (see Notes &amp; findings), never guessed from keywords; an accident is charged exactly once — the declaration when the seller ticked it, the finding only when the tick-box says accident-free but the text admits damage."
+    },
+    "equipment_fit": {
+      "body": "<b>$eq_wishlist_pct</b> weighted share of the wishlist actually fitted, plus <b>$eq_year_pct</b> registration-year recency — a deliberate preference: a newer car's kit is newer-generation (infotainment, ADAS revisions) even with identical boxes ticked, so age is allowed to count here as well as in Reliability.",
+      "details": "Wishlist: $eq_wishlist_list. Towbar counts only when <i>fitted</i>, not merely “capable”. Year maps linearly $eq_year_worst → 0 … $eq_year_best → 10, clamped. Options every candidate has (CarPlay, heated seats, cruise) are deliberately excluded — they are part of the search filter, so scoring them would shift every car by a constant instead of separating them."
+    },
+    "autobahn": {
+      "body": "From engine power: a base of $ab_base plus $ab_per_ps per PS above 130, plus a bonus for a mid-size estate or a big engine. A proxy for relaxed high-speed cruising.",
+      "details": "<code>clamp($ab_base + $ab_per_ps·max(0, PS−130) + bonus, 0, 10)</code>. Bonus = the best of the segment match ($ab_segment_bonuses) or +$ab_big_bonus for ≥ $ab_big_cm3 cm³. A per-model entry in <code>autobahn.map</code> overrides the formula outright."
+    },
+    "cost": {
+      "body": "One composite money score from three things a single €/yr figure cannot separate: <b>what you pay</b> (asking price), <b>whether that price is fair</b> (mobile.de's own verdict for this exact car), and <b>what it costs to keep</b> (the annual <i>cash</i> running cost). A cheap car can still be poor value; a well-priced car can still be expensive to run. Each contributes $cost_price_pct / $cost_rating_pct / $cost_running_pct.",
+      "details": "<b>Asking price</b> — absolute curve, €$cost_price_best → 10, €$cost_price_worst → 0, linear and clamped. <b>Price rating</b> — mobile.de's five buckets mapped to $cost_rating_scale; an unrated listing scores $cost_rating_unknown (neutral), since silence is not a bad price. <b>Running cost (cash)</b> — petrol, electricity, maintenance, insurance, road tax and HU per year, on its own absolute curve: €$cost_running_best → 10, €$cost_running_worst → 0. <b>Depreciation is displayed but not scored</b>: it is estimated <i>from the asking price</i>, which already has its own third — scoring it too would charge the same euros twice. All three parts are absolute, so a car's Cost score never moves when you rank a subset. ADAC Autokosten structure over a $tco_hold_years-year hold at $tco_annual_km km/yr at €$tco_fuel_price/l. Kfz-Steuer is computed <b>exactly</b> (§8 KraftStG); maintenance and insurance are estimates anchored to ADAC reference figures. <b>Plug-in hybrids:</b> the WLTP l/100km is a blended figure that assumes charging and ignores the electricity you buy, so it is discarded — instead $phev_share_pct of the km run on grid power ($phev_kwh kWh/100km at €$phev_price_kwh/kWh) and the rest on the engine at $phev_petrol l/100km. Full/mild hybrids are untouched."
+    },
+    "mileage": {
+      "body": "Absolute odometer curve: <b>$ml_best_km km → 10</b>, <b>$ml_worst_km km → 0</b>, linear and clamped.",
+      "details": "Deliberately absolute rather than relative to the other candidates, so a car’s mileage score never changes just because you ranked a different subset — and a field of similar cars gets similar scores instead of being stretched across the whole range."
+    },
+    "location": {
+      "body": "Absolute travel-time curve from <b>$loc_origin</b> to the dealer: <b>≤ $loc_best min → 10</b>, <b>≥ $loc_worst min → 0</b>. At $loc_best min, Berlin and effectively all of Brandenburg score 10.",
+      "details": "Travel time is fetched <b>once</b> per listing (<code>carcache.py travel</code>: Nominatim geocode + OSRM driving route) and stored on the record, so ranking never touches the network. Preference order is public transport → car time → car distance → straight-line; public transport is currently unavailable (the free DB endpoint returns 503), so listings carry real driving times. Unknown ⇒ fallback $loc_fallback. The weight is deliberately small: visiting the car is a one-time trip, not a cost of ownership — and this criterion's wide spread means it punches above its nominal weight (see the stability section)."
+    }
+  },
+  "footer": ""
+}

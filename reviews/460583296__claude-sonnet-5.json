@@ -1,0 +1,38 @@
+{
+  "findings": [
+    {
+      "severity": "major",
+      "category": "accident",
+      "summary": "Seller's free-text description discloses that the car was hit on the rear right side panel, despite the structured field marking the vehicle as accident-free.",
+      "evidence": "AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER"
+    }
+  ],
+  "notable_options": [
+    "Navigation system",
+    "LED headlights",
+    "Adaptive cruise control (ACC)",
+    "Front/rear parking camera",
+    "Keyless entry",
+    "Heated steering wheel",
+    "Heated front seats",
+    "Premium sound system",
+    "Privacy glass (tinted rear windows)",
+    "Ambient lighting",
+    "Lane-keeping assist",
+    "Sport suspension",
+    "Sport seats"
+  ],
+  "summary": "This is a 2024 Ford Focus Turnier ST-Line mild-hybrid estate with one owner and low mileage (85,800 km), well equipped with navigation, ACC, LED lights and keyless entry; however, the seller states the car was hit on the rear right side panel, which contradicts the listing's accident-free classification.",
+  "listing_id": "460583296",
+  "model": "claude-sonnet-5",
+  "effort": "high",
+  "source": "text",
+  "prompt_sha": "3428677f",
+  "reviewed_at_utc": "2026-07-15T15:22:19+00:00",
+  "usage": {
+    "input": 8250,
+    "output": 1300,
+    "usd": 0.0442
+  },
+  "raw_text": "{\"findings\":[{\"severity\":\"major\",\"category\":\"accident\",\"summary\":\"Seller's free-text description discloses that the car was hit on the rear right side panel, despite the structured field marking the vehicle as accident-free.\",\"evidence\":\"AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER\"}],\"notable_options\":[\"Navigation system\",\"LED headlights\",\"Adaptive cruise control (ACC)\",\"Front/rear parking camera\",\"Keyless entry\",\"Heated steering wheel\",\"Heated front seats\",\"Premium sound system\",\"Privacy glass (tinted rear windows)\",\"Ambient lighting\",\"Lane-keeping assist\",\"Sport suspension\",\"Sport seats\"],\"summary\":\"This is a 2024 Ford Focus Turnier ST-Line mild-hybrid estate with one owner and low mileage (85,800 km), well equipped with navigation, ACC, LED lights and keyless entry; however, the seller states the car was hit on the rear right side panel, which contradicts the listing's accident-free classification.\"}"
+}

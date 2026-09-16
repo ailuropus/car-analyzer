@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Local, per-machine Claude Code settings (browser-MCP permissions etc.)
+.claude/settings.local.json
+
+# Secrets — review.py reads ANTHROPIC_API_KEY from here. NEVER commit this.
+.env
+.env.*
+!.env.example
+
+# Listing PDFs are scraped copyrighted mobile.de pages (dealer contact info,
+# photos) and are large — 643 MB here. Keep the local archive out of git, but
+# ship ONE as a worked example so the intake/extract workflow is reproducible.
+inbox/*.pdf
+processed/*.pdf
+!processed/460152834.pdf
+
+# The AUTO BILD TÜV-Report magazine — copyrighted, 19 MB. sources/extract_tuv.py
+# and the extracted cells stay; the magazine itself does not.
+sources/*.pdf
+
+# LLM review audit trail — one JSON per run, 115 of them here. Nothing reads
+# them (review.py writes them; cars.json already holds the LLM fields), so ship
+# worked examples only: 459936680 and 460583296 are the SAME car re-listed, and
+# both reviews independently catch the rear-panel damage the Unfallfrei box
+# denies — the reproducibility a hand-read never had. The three
+# 460583296__<model> files are the comparison behind DEFAULT_MODEL.
+reviews/*
+!reviews/459936680.json
+!reviews/460583296.json
+!reviews/460583296__claude-*.json
+
+# Extraction skeletons: scratch <id>.json that `add` reads into cars.json
+skeletons/
+
+# One-off scrape dump: the raw text of the user's own mobile.de Parkplatz page,
+# already distilled into sources/park.json (the worked example for
+# `carcache.py apply-parkplatz --file park.json`). Nothing reads the .txt.
+sources/park.txt

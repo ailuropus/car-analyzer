@@ -1,0 +1,44 @@
+{
+  "findings": [
+    {
+      "severity": "minor",
+      "category": "accident",
+      "summary": "Although the structured data declares the car accident-free, the seller's description admits it was hit on the rear right side panel.",
+      "evidence": "AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER"
+    },
+    {
+      "severity": "note",
+      "category": "usage",
+      "summary": "The car is a German-market vehicle with one previous owner.",
+      "evidence": "1 HAND DEUTSCHES FAHRZEUG"
+    }
+  ],
+  "options_from_prose": [
+    "variable_floor"
+  ],
+  "notable_options": [
+    "Navigation system",
+    "LED headlights",
+    "Adaptive cruise control (ACC)",
+    "Keyless entry",
+    "Heated steering wheel",
+    "Front and rear parking camera",
+    "Variable boot floor",
+    "Privacy glass (tinted rear windows)",
+    "Sport seats",
+    "Mild-hybrid EcoBoost engine"
+  ],
+  "summary": "This is a 2024 Ford Focus Turnier ST-Line estate with 85,800 km, automatic transmission, and a well-equipped ST-Line trim including navigation, LED lights and ACC; despite being marked accident-free in the structured data, the seller's own text discloses a minor impact to the rear right side panel.",
+  "listing_id": "460583296",
+  "model": "claude-sonnet-5",
+  "effort": "high",
+  "source": "text",
+  "prompt_sha": "0c239cc8",
+  "reviewed_at_utc": "2026-07-15T19:42:02+00:00",
+  "usage": {
+    "input": 9082,
+    "output": 1735,
+    "usd": 0.0533
+  },
+  "raw_text": "{\"findings\":[{\"severity\":\"minor\",\"category\":\"accident\",\"summary\":\"Although the structured data declares the car accident-free, the seller's description admits it was hit on the rear right side panel.\",\"evidence\":\"AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER\"},{\"severity\":\"note\",\"category\":\"usage\",\"summary\":\"The car is a German-market vehicle with one previous owner.\",\"evidence\":\"1 HAND DEUTSCHES FAHRZEUG\"}],\"options_from_prose\":[\"variable_floor\"],\"notable_options\":[\"Navigation system\",\"LED headlights\",\"Adaptive cruise control (ACC)\",\"Keyless entry\",\"Heated steering wheel\",\"Front and rear parking camera\",\"Variable boot floor\",\"Privacy glass (tinted rear windows)\",\"Sport seats\",\"Mild-hybrid EcoBoost engine\"],\"summary\":\"This is a 2024 Ford Focus Turnier ST-Line estate with 85,800 km, automatic transmission, and a well-equipped ST-Line trim including navigation, LED lights and ACC; despite being marked accident-free in the structured data, the seller's own text discloses a minor impact to the rear right side panel.\"}"
+}

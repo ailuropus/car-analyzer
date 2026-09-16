@@ -1,0 +1,39 @@
+{
+  "findings": [
+    {
+      "severity": "minor",
+      "category": "accident",
+      "summary": "Seller states the rear right side panel was hit, despite the structured data declaring the vehicle accident-free.",
+      "evidence": "AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER"
+    }
+  ],
+  "options_from_prose": [
+    "variable_floor"
+  ],
+  "notable_options": [
+    "Navigation system (Ford SYNC 4 touchscreen)",
+    "LED headlights",
+    "Adaptive cruise control (ACC)",
+    "Keyless entry",
+    "Heated steering wheel",
+    "Front and rear parking camera",
+    "Privacy glass (tinted rear windows)",
+    "Variable cargo floor",
+    "Sport seats",
+    "Sport-tuned suspension",
+    "Roof rails"
+  ],
+  "summary": "This is a low-mileage (85,800 km), one-owner 2024 Ford Focus Turnier ST-Line mild-hybrid with a well-equipped options list; the seller notes a hit/scrape on the rear right side panel even though the structured field marks the car as accident-free.",
+  "listing_id": "459936680",
+  "model": "claude-sonnet-5",
+  "effort": "high",
+  "source": "text",
+  "prompt_sha": "0c239cc8",
+  "reviewed_at_utc": "2026-07-15T19:38:09+00:00",
+  "usage": {
+    "input": 8921,
+    "output": 1648,
+    "usd": 0.0515
+  },
+  "raw_text": "{\"findings\":[{\"severity\":\"minor\",\"category\":\"accident\",\"summary\":\"Seller states the rear right side panel was hit, despite the structured data declaring the vehicle accident-free.\",\"evidence\":\"AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER\"}],\"options_from_prose\":[\"variable_floor\"],\"notable_options\":[\"Navigation system (Ford SYNC 4 touchscreen)\",\"LED headlights\",\"Adaptive cruise control (ACC)\",\"Keyless entry\",\"Heated steering wheel\",\"Front and rear parking camera\",\"Privacy glass (tinted rear windows)\",\"Variable cargo floor\",\"Sport seats\",\"Sport-tuned suspension\",\"Roof rails\"],\"summary\":\"This is a low-mileage (85,800 km), one-owner 2024 Ford Focus Turnier ST-Line mild-hybrid with a well-equipped options list; the seller notes a hit/scrape on the rear right side panel even though the structured field marks the car as accident-free.\"}"
+}

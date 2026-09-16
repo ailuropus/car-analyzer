@@ -1,0 +1,907 @@
+{
+  "_comment": "carcache search profile. Edit freely and re-run recompute/rank. Weights sum to ~1.0.",
+  "_sources": {
+    "reliability": "DERIVED (not hand-set) from the objective per-cell figures in model_reliability_basis, matched to each listing — see reliability_model. ADAC breakdowns/1000 are the OFFICIAL per-registration-year cells from the ADAC Pannenstatistik 2025 (https://assets.adac.de/image/upload/v1744788916/ADAC-eV/KOR/Text/PDF/Pannenstatistik_2025_final_nrmvls.pdf, class tables Kompakt-/Mittelklasse, columns build-year 2022..2015; e.g. VW Golf 2.6→10.5, Opel Insignia 17.2→40.9, Renault Mégane 1.8→35.0). Models absent from the 2025 statistic (Hyundai i40, Kia Optima — discontinued) carry no ADAC and are scored on TÜV alone. TÜV Mängelquote cells are the OFFICIAL per-model 'erhebliche Mängel' rates by age band (2-3/4-5/6-7/8-9/10-11/12-13 Jahre) from the AUTO BILD TÜV-Report 2026, extracted from each model's page via sources/extract_tuv.py (the report's summary block is itself age-indexed — it uses the newer generation for young bands and the older for old bands — which matches how the lookup picks a cell by age). Each cell has tuv_source recording its report page. The three discontinued models absent from the 2026 report (Hyundai i40, Kia Optima, Renault Talisman) keep MODELLED TÜV or fall back. Each cell maps to 0-10 (higher = better) vs the frozen market reference (mean/sd calibrated from the catalogue's real cells). Replace any TÜV cell with a real figure when available.",
+    "tco": "ADAC Autokosten component model (5yr / 75,000km): depreciation + fuel + maintenance(Werkstatt+Reifen) + insurance + Kfz-Steuer + HU. Kfz-Steuer is computed exactly from the German formula (§8 KraftStG: Benzin 2 EUR/100ccm, Diesel 9.50 EUR/100ccm; CO2 2 EUR/g over the 95 g/km allowance, tiered for 2021+ registrations). Maintenance/insurance/depreciation are ESTIMATES anchored to ADAC reference figures (mid-class ~73 EUR/mo maintenance, ~56 EUR/mo insurance, depreciation = largest cost), adapted for used cars (older = more maintenance, slower % depreciation).",
+    "condition": "Single 0-10 score from current reported condition + history. Starts at 10 and subtracts: accident (unfallfrei false/unknown), extra owners, missing service history, missing TÜV, and reported DEFECTS classified by severity from the record's flags (major disclosed mechanical defects e.g. coolant/oil leak, head gasket, rust-through, engine/gearbox damage = large penalty; minor cautions = small, capped). Spec/neutral observations don't penalise. Keywords + penalties tunable below.",
+    "safety": "Euro NCAP per model generation (model_safety) — INFORMATIONAL, not scored: all catalogue models are 5-star and the percentage scores are not comparable across protocol years, so a score would rank test vintage, not safety. Verified against euroncap.com result pages (e.g. Ford Focus 2018: https://www.euroncap.com/en/results/ford/focus/33017)."
+  },
+  "_weights_comment": "weights must stay {criterion: number} — compute_ranking iterates the keys. location was 0.09 but its wide spread (dealers 1-8h away) made it punch at ~2.6x its nominal weight, nearly matching cost; visiting is a ONE-TIME trip, not ownership, so it was cut to 0.05 and the freed 0.04 spread over reliability/condition/equipment/cost. See the report's 'How stable is this ranking?' table (weight x sd) before retuning.",
+  "weights": {
+    "reliability": 0.19,
+    "condition": 0.19,
+    "equipment_fit": 0.15,
+    "autobahn": 0.11,
+    "cost": 0.21,
+    "mileage": 0.1,
+    "location": 0.05
+  },
+  "cost": {
+    "_comment": "Composite money score. `weights` are RELATIVE and normalised, so 1/1/1 = equal thirds. All three parts are ABSOLUTE — a car's Cost score never moves when you rank a subset. `running` scores the CASH running cost (TCO minus depreciation): depreciation is estimated FROM the asking price, which already has its own third, so scoring it too charged the same euros twice (and imported the hand-set brand_retention_adj priors into the score). Depreciation still shows in the displayed TCO/yr.",
+    "weights": {
+      "price": 30,
+      "price_rating": 40,
+      "running": 30
+    },
+    "price": {
+      "best_eur": 10000,
+      "worst_eur": 17000
+    },
+    "running": {
+      "_comment": "Cash running cost curve (eur/yr): best -> 10, worst -> 0, clamped. Anchors frozen around the market — recalibrate deliberately, not per-subset. Catalogue range with REAL-WORLD consumption (model_consumption) is 1862-3585, mean 2407; the anchors still bracket it, so they were left alone when WLTP was replaced by measured litres (that change added roughly 120 eur/yr on average).",
+      "best_eur_yr": 1800,
+      "worst_eur_yr": 3600
+    },
+    "price_rating_map": {
+      "sehr_gut": 10,
+      "gut": 7.5,
+      "fair": 5,
+      "erhoeht": 2.5,
+      "hoch": 0
+    },
+    "price_rating_unknown": 5
+  },
+  "location": {
+    "_comment": "How far the DEALER is from home. Score 0-10 from door-to-door travel time: <= best_minutes -> 10, >= worst_minutes -> 0, linear and clamped (absolute, so it never re-scales with the candidate set). best_minutes 90 means Berlin AND effectively all of Brandenburg score 10 without needing a state lookup. Travel data is fetched ONCE per listing by `carcache.py travel` and stored on the record (travel_minutes / travel_km / travel_mode) — rank/report never touch the network. Preference order for travel_mode: public (DB) > car (OSRM driving time) > car_km (distance / avg_kmh) > direct (straight-line / avg_kmh). Public transport is currently unavailable (the free DB HAFAS bridge returns 503), so listings carry real OSRM car times.",
+    "origin": {
+      "name": "Berlin",
+      "lat": 52.52,
+      "lon": 13.405
+    },
+    "best_minutes": 90,
+    "worst_minutes": 480,
+    "avg_kmh": 95,
+    "fallback_score": 5.0
+  },
+  "wishlist": {
+    "adaptive_cruise": 2,
+    "towbar": 1,
+    "standheizung": 2,
+    "variable_floor": 2,
+    "roof_window": 3,
+    "heated_wheel": 1,
+    "blind_spot": 1,
+    "rear_camera": 1,
+    "keyless": 1
+  },
+  "equipment": {
+    "_comment": "Equipment score = wishlist_weight * (weighted wishlist share) + year_weight * (registration-year recency). The year term is a DELIBERATE preference (user decision 2026-07): a newer car's kit is genuinely newer-generation even with identical boxes ticked (infotainment, ADAS revisions), so age is allowed to reach the score here AS WELL AS through the reliability cells — an accepted, documented overlap, not an accident. Set year_weight 0 for pure wishlist. NOTE: carplay + heated_seats were dropped from the wishlist — every candidate has them (effectively part of the search filter), so they only added a constant offset, never discrimination. Keys in `wishlist` must stay {option: number}; put comments here, not there.",
+    "wishlist_weight": 0.7,
+    "year_weight": 0.3,
+    "year_best": 2025,
+    "year_worst": 2016
+  },
+  "mileage": {
+    "_comment": "Absolute odometer curve (NOT relative to the candidate set): best_km -> 10, worst_km -> 0, linear and clamped. Lower km = higher score.",
+    "best_km": 30000,
+    "worst_km": 180000
+  },
+  "reliability_model": {
+    "_comment": "Reliability is DERIVED from the objective per-cell figures in model_reliability_basis (no manual score). For each metric (tuv, adac; lower=better) the cell matching THIS listing is looked up directly — TÜV by the car's age band, ADAC by its registration year — then mapped to 0-10 vs a FIXED market reference: s = clamp(midpoint + gain*(mean - cell)/sd, 0, 10). The two sub-scores combine by metric_weights. Older band / older year => higher rate => lower score, so a 2023 car outscores the same model as a 2017. reference.mean/sd are calibrated once from the catalogue's actual cell values and FROZEN, so ranking a subset never re-scales. A car with no cell for either metric gets fallback_score and is flagged in the report.",
+    "metric_weights": {
+      "tuv": 0.5,
+      "adac": 0.5
+    },
+    "gain": 2.5,
+    "midpoint": 5.0,
+    "fallback_score": 5.0,
+    "reference": {
+      "_comment": "Fixed 0-10 anchors: cell = mean -> score 5, mean -/+ 2*sd -> 10/0. Calibrated from the catalogue's looked-up cell values; frozen so subsets don't re-scale.",
+      "tuv": {
+        "mean": 15.44,
+        "sd": 3.87,
+        "_comment": "Calibrated from the catalogue listings' looked-up REAL TÜV cells (AUTO BILD TÜV-Report 2026). Frozen so subsets do not re-scale; recompute after adding many cars."
+      },
+      "adac": {
+        "mean": 13.0,
+        "sd": 8.9
+      }
+    }
+  },
+  "model_reliability_basis": {
+    "_comment": "The objective per-cell inputs the reliability score is DERIVED from. tuv_by_age = TÜV Report significant-defect rate (%) by vehicle age band (2-3/4-5/6-7/8-9/10-11/12-13 yr); lower is better. adac_by_year = ADAC Pannenstatistik 2025 breakdowns per 1000 vehicles, keyed by registration year (lower is better). ADAC values are the OFFICIAL published per-year cells (ADAC Pannenstatistik 2025, columns 2022..2015); discontinued models absent from the statistic (Hyundai i40, Kia Optima) carry no adac_by_year and are scored on TÜV alone. tuv_by_age values are the OFFICIAL per-model 'erhebliche Mängel' rates from the AUTO BILD TÜV-Report 2026 (extracted by sources/extract_tuv.py; each entry carries a tuv_source with its page) — EXCEPT Hyundai i40, Kia Optima and Renault Talisman, which the 2026 report does not cover and which keep MODELLED figures or fall back. Replace any cell with a newer real figure any time. Longest make/model key match wins (opel insignia beats opel). Sources in _sources.",
+    "volkswagen golf": {
+      "tuv_by_age": {
+        "2-3": 6.6,
+        "4-5": 6.6,
+        "6-7": 9.7,
+        "8-9": 14.1,
+        "10-11": 17.4,
+        "12-13": 24.4
+      },
+      "adac_by_year": {
+        "2022": 2.6,
+        "2021": 5.4,
+        "2020": 4.5,
+        "2019": 5.2,
+        "2018": 6.6,
+        "2017": 7.6,
+        "2016": 9.8,
+        "2015": 10.5
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p153)"
+    },
+    "skoda octavia": {
+      "tuv_by_age": {
+        "2-3": 6.9,
+        "4-5": 10.1,
+        "6-7": 12.4,
+        "8-9": 16.5,
+        "10-11": 20.6,
+        "12-13": 31.5
+      },
+      "adac_by_year": {
+        "2022": 4.6,
+        "2021": 11.4,
+        "2020": 9.8,
+        "2019": 8.9,
+        "2018": 9.1,
+        "2017": 9.3,
+        "2016": 10.8,
+        "2015": 10.4
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p131)"
+    },
+    "seat leon": {
+      "tuv_by_age": {
+        "2-3": 9.3,
+        "4-5": 9.9,
+        "6-7": 12.3,
+        "8-9": 15.9,
+        "10-11": 19.4,
+        "12-13": 30.8
+      },
+      "adac_by_year": {
+        "2022": 2.3,
+        "2021": 6.3,
+        "2020": 6.7,
+        "2019": 4.7,
+        "2018": 7.1,
+        "2017": 8.0,
+        "2016": 7.8,
+        "2015": 10.0
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p124)"
+    },
+    "hyundai i30": {
+      "tuv_by_age": {
+        "2-3": 6.6,
+        "4-5": 11.5,
+        "6-7": 13.5,
+        "8-9": 22.0,
+        "10-11": 30.1,
+        "12-13": 36.1
+      },
+      "adac_by_year": {
+        "2022": 3.4,
+        "2021": 5.2,
+        "2020": 9.9,
+        "2019": 13.7,
+        "2018": 16.5,
+        "2017": 16.3,
+        "2016": 14.5,
+        "2015": 16.8
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p79)"
+    },
+    "hyundai i40": {
+      "tuv_by_age": {
+        "2-3": 6.2,
+        "4-5": 10.0,
+        "6-7": 14.3,
+        "8-9": 18.1,
+        "10-11": 21.9
+      }
+    },
+    "kia optima": {
+      "tuv_by_age": {
+        "2-3": 6.2,
+        "4-5": 10.0,
+        "6-7": 14.3,
+        "8-9": 18.1,
+        "10-11": 21.9
+      }
+    },
+    "opel astra": {
+      "tuv_by_age": {
+        "2-3": 9.9,
+        "4-5": 10.8,
+        "6-7": 13.7,
+        "8-9": 15.8,
+        "10-11": 22.2,
+        "12-13": 29.9
+      },
+      "adac_by_year": {
+        "2022": 6.2,
+        "2021": 9.9,
+        "2020": 12.6,
+        "2019": 10.1,
+        "2018": 11.8,
+        "2017": 11.6,
+        "2016": 14.3,
+        "2015": 22.2
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p107)"
+    },
+    "opel insignia": {
+      "tuv_by_age": {
+        "2-3": 9.3,
+        "4-5": 13.1,
+        "6-7": 19.3,
+        "8-9": 21.7,
+        "10-11": 24.8,
+        "12-13": 30.3
+      },
+      "adac_by_year": {
+        "2022": 17.2,
+        "2021": 21.0,
+        "2020": 19.5,
+        "2019": 25.3,
+        "2018": 31.0,
+        "2017": 37.1,
+        "2016": 40.9,
+        "2015": 33.8
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p108)"
+    },
+    "ford focus": {
+      "tuv_by_age": {
+        "2-3": 9.4,
+        "4-5": 12.6,
+        "6-7": 19.5,
+        "8-9": 26.1,
+        "10-11": 29.2,
+        "12-13": 34.9
+      },
+      "adac_by_year": {
+        "2022": 10.6,
+        "2021": 8.2,
+        "2020": 12.5,
+        "2019": 15.3,
+        "2018": 18.8,
+        "2017": 18.4,
+        "2016": 22.9,
+        "2015": 25.2
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p70)"
+    },
+    "ford mondeo": {
+      "tuv_by_age": {
+        "2-3": 14.3,
+        "4-5": 15.2,
+        "6-7": 14.8,
+        "8-9": 17.4,
+        "10-11": 29.6,
+        "12-13": 35.1
+      },
+      "adac_by_year": {
+        "2020": 23.2,
+        "2019": 15.2,
+        "2018": 23.6,
+        "2017": 27.0,
+        "2016": 28.1
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p71)"
+    },
+    "renault mégane": {
+      "tuv_by_age": {
+        "2-3": 11.8,
+        "4-5": 11.2,
+        "6-7": 15.7,
+        "8-9": 19.9,
+        "10-11": 31.7,
+        "12-13": 37.4
+      },
+      "adac_by_year": {
+        "2022": 1.8,
+        "2021": 9.4,
+        "2020": 9.1,
+        "2019": 14.7,
+        "2018": 22.8,
+        "2017": 30.1,
+        "2016": 35.0,
+        "2015": 28.1
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p121)"
+    },
+    "volkswagen passat": {
+      "tuv_by_age": {
+        "2-3": 6.9,
+        "4-5": 11.9,
+        "6-7": 13.2,
+        "8-9": 17.8,
+        "10-11": 28.6,
+        "12-13": 32.2
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p154)"
+    },
+    "skoda superb": {
+      "tuv_by_age": {
+        "2-3": 9.6,
+        "4-5": 12.1,
+        "6-7": 13.4,
+        "8-9": 17.3,
+        "10-11": 24.8,
+        "12-13": 29.6
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p132)"
+    },
+    "kia cee'd": {
+      "tuv_by_age": {
+        "2-3": 6.5,
+        "4-5": 10.0,
+        "6-7": 14.2,
+        "8-9": 20.4,
+        "10-11": 29.6,
+        "12-13": 32.6
+      },
+      "tuv_source": "AUTO BILD TÜV-Report 2026, erhebliche Mängel by age band (p85)"
+    }
+  },
+  "model_safety": {
+    "_comment": "Euro NCAP results per model generation — INFORMATIONAL ONLY, deliberately not a scored criterion: every model in the catalogue is 5-star, and the adult-occupant percentages are NOT comparable across test years (the protocol gets stricter every few years — the Focus's 85% under the 2018 protocol is not worse than the Golf's 94% under the 2012 one; Euro NCAP itself says ratings are only comparable within a protocol year). Scoring the raw percentage would rank cars by test vintage, not safety. Shown in the report with the test year so a reader can judge. `tests` = one entry per generation; the entry with the largest from_year <= the car's registration year applies. adult_pct = adult-occupant score. Sources: euroncap.com per-model result pages (verified 2026-07).",
+    "volkswagen golf": {
+      "tests": [
+        {
+          "from_year": 2012,
+          "stars": 5,
+          "adult_pct": 94,
+          "test_year": 2012
+        }
+      ]
+    },
+    "volkswagen passat": {
+      "tests": [
+        {
+          "from_year": 2014,
+          "stars": 5,
+          "adult_pct": 85,
+          "test_year": 2014
+        }
+      ]
+    },
+    "skoda octavia": {
+      "tests": [
+        {
+          "from_year": 2013,
+          "stars": 5,
+          "adult_pct": 93,
+          "test_year": 2013
+        }
+      ]
+    },
+    "skoda superb": {
+      "tests": [
+        {
+          "from_year": 2015,
+          "stars": 5,
+          "adult_pct": 86,
+          "test_year": 2015
+        }
+      ]
+    },
+    "seat leon": {
+      "tests": [
+        {
+          "from_year": 2012,
+          "stars": 5,
+          "adult_pct": 94,
+          "test_year": 2012
+        },
+        {
+          "from_year": 2020,
+          "stars": 5,
+          "adult_pct": 92,
+          "test_year": 2020
+        }
+      ]
+    },
+    "hyundai i30": {
+      "tests": [
+        {
+          "from_year": 2017,
+          "stars": 5,
+          "adult_pct": 88,
+          "test_year": 2017
+        }
+      ]
+    },
+    "hyundai i40": {
+      "tests": [
+        {
+          "from_year": 2011,
+          "stars": 5,
+          "adult_pct": 92,
+          "test_year": 2011
+        }
+      ]
+    },
+    "kia optima": {
+      "tests": [
+        {
+          "from_year": 2015,
+          "stars": 5,
+          "adult_pct": 89,
+          "test_year": 2015
+        }
+      ]
+    },
+    "kia cee'd": {
+      "tests": [
+        {
+          "from_year": 2019,
+          "stars": 5,
+          "adult_pct": 88,
+          "test_year": 2019,
+          "note": "5* with the ADAS pack; 4* in base trim"
+        }
+      ]
+    },
+    "opel astra": {
+      "tests": [
+        {
+          "from_year": 2015,
+          "stars": 5,
+          "adult_pct": 86,
+          "test_year": 2015
+        }
+      ]
+    },
+    "opel insignia": {
+      "tests": [
+        {
+          "from_year": 2017,
+          "stars": 5,
+          "adult_pct": 93,
+          "test_year": 2017
+        }
+      ]
+    },
+    "ford focus": {
+      "tests": [
+        {
+          "from_year": 2018,
+          "stars": 5,
+          "adult_pct": 85,
+          "test_year": 2018
+        }
+      ]
+    },
+    "ford mondeo": {
+      "tests": [
+        {
+          "from_year": 2014,
+          "stars": 5,
+          "adult_pct": 86,
+          "test_year": 2014
+        }
+      ]
+    },
+    "renault mégane": {
+      "tests": [
+        {
+          "from_year": 2015,
+          "stars": 5,
+          "adult_pct": 88,
+          "test_year": 2015
+        }
+      ]
+    },
+    "renault talisman": {
+      "tests": [
+        {
+          "from_year": 2015,
+          "stars": 5,
+          "adult_pct": 86,
+          "test_year": 2015
+        }
+      ]
+    }
+  },
+  "condition": {
+    "penalties": {
+      "accident_confirmed": 4.0,
+      "accident_unknown": 1.0,
+      "owner_step": 0.6,
+      "no_service_history": 1.5,
+      "no_tuv": 1.0,
+      "major_defect": 3.5,
+      "minor_issue": 0.4,
+      "minor_issue_cap": 2.0
+    },
+    "major_defect_keywords": [
+      "seepage",
+      "wasserverlust",
+      "kühlmittelverlust",
+      "coolant loss",
+      "coolant seepage",
+      "ölverlust",
+      "oil loss",
+      "kopfdichtung",
+      "head gasket",
+      "leak",
+      "leckage",
+      "leakage",
+      "durchrostung",
+      "motorschaden",
+      "engine damage",
+      "getriebeschaden",
+      "transmission failure"
+    ],
+    "minor_issue_keywords": [
+      "check",
+      "prüf",
+      "inspect",
+      "wear",
+      "worn",
+      "verschleiß",
+      "overdue",
+      "überfällig",
+      "worked hard",
+      "high usage",
+      "usage",
+      "km/yr",
+      "ceiling",
+      "near the 120",
+      "belt",
+      "steuerkette",
+      "timing",
+      "turbo",
+      "clutch",
+      "kupplung",
+      "ruckeln",
+      "hesitation"
+    ],
+    "positive_markers": [
+      "standout",
+      "lowest mileage",
+      "cleanest",
+      "best in"
+    ]
+  },
+  "autobahn": {
+    "base": 5.0,
+    "per_ps_over_130": 0.06,
+    "big_engine_cm3": 1700,
+    "big_engine_bonus": 0.5,
+    "segment_bonus": {
+      "insignia": 1.0,
+      "mondeo": 1.0,
+      "passat": 1.0,
+      "superb": 1.0,
+      "optima": 0.8
+    },
+    "map": {}
+  },
+  "segments": {
+    "mid_keywords": [
+      "insignia",
+      "mondeo",
+      "optima",
+      "passat",
+      "superb"
+    ]
+  },
+  "tco": {
+    "annual_km": 6000,
+    "fuel_price_eur_l": 1.85,
+    "default_consumption_l100": 6.5,
+    "hold_years": 5,
+    "hu_per_year": 65,
+    "phev": {
+      "_comment": "Plug-in hybrids publish a WLTP blended figure (e.g. 1.6 l/100km) that assumes you charge and drive mostly electric AND ignores the electricity you buy — using it directly made the PHEV look almost free to run. So for a detected PHEV we ignore the WLTP litres and model energy properly: electric_share of the annual km run on grid electricity (kwh_per_100km * electricity_price_eur_kwh), the rest on the engine at petrol_l100_engine. Detection: fuel is a hybrid AND (WLTP <= detect_max_wltp_l100 OR a keyword matches). Full/mild hybrids (Mondeo 2.0 Hybrid 4.4 l, i30 48V) are NOT plug-ins — their stated figure is real petrol burn and is used as-is.",
+      "detect_max_wltp_l100": 3.0,
+      "keywords": [
+        "e-hybrid",
+        "plug-in",
+        "plugin",
+        "phev",
+        "gte",
+        "e-tron",
+        "recharge"
+      ],
+      "electric_share": 0.6,
+      "kwh_per_100km": 18.0,
+      "electricity_price_eur_kwh": 0.35,
+      "petrol_l100_engine": 6.8
+    },
+    "maintenance": {
+      "compact": 600,
+      "mid": 780,
+      "age_uplift_per_year": 0.05,
+      "age_uplift_cap": 0.5
+    },
+    "insurance": {
+      "compact": 550,
+      "mid": 680,
+      "ps_over_180": 150,
+      "ps_over_220": 350
+    },
+    "depreciation": {
+      "base_retention": 0.86,
+      "age_bonus_per_year": 0.004,
+      "retention_cap": 0.9,
+      "brand_retention_adj": {
+        "toyota": 0.03,
+        "volkswagen": 0.02,
+        "skoda": 0.02,
+        "mazda": 0.01,
+        "kia": 0.0,
+        "hyundai": 0.0,
+        "opel": -0.02,
+        "ford mondeo": -0.02,
+        "renault": -0.03
+      }
+    }
+  },
+  "defaults": {
+    "model_reliability": 6,
+    "model_comfort": 6,
+    "autobahn": 5.0
+  },
+  "model_consumption": {
+    "_comment": "REAL-WORLD consumption (l/100km) per model+engine from spritmonitor.de, where drivers log every fill-up — queried 2026-07-20 with filters power +/-6 PS, our listings' reg-year range +/-1, minkm=1500. WLTP is systematically optimistic and the gap VARIES BY MODEL (median +26% here, range +2%..+49%), so it is not a constant that cancels out in ranking: using the listing's WLTP made thirsty engines look artificially close to frugal ones. 'n' is the number of logged vehicles behind each figure; only n>=10 was kept (smaller samples keep the listing's stated figure instead). Matching: all tokens of `match` must appear in the car's make+model, `fuel` must equal the record's fuel, and |PS difference| <= ps_tolerance; the closest power wins, then the largest sample. For a PHEV the figure is the REAL PETROL burn including electric-driven km, so it replaces the modelled engine consumption while electricity is still added from tco.phev.",
+    "ps_tolerance": 8,
+    "entries": [
+      {
+        "match": "ford focus",
+        "fuel": "Benzin",
+        "ps": 150,
+        "real_l100": 7.28,
+        "n": 546
+      },
+      {
+        "match": "ford focus",
+        "fuel": "Benzin",
+        "ps": 155,
+        "real_l100": 6.4,
+        "n": 95
+      },
+      {
+        "match": "ford focus",
+        "fuel": "Hybrid-Benzin",
+        "ps": 155,
+        "real_l100": 6.16,
+        "n": 61
+      },
+      {
+        "match": "ford focus",
+        "fuel": "Benzin",
+        "ps": 182,
+        "real_l100": 7.62,
+        "n": 199
+      },
+      {
+        "match": "ford mondeo",
+        "fuel": "Benzin",
+        "ps": 165,
+        "real_l100": 8.35,
+        "n": 50
+      },
+      {
+        "match": "hyundai i30",
+        "fuel": "Benzin",
+        "ps": 160,
+        "real_l100": 6.57,
+        "n": 81
+      },
+      {
+        "match": "hyundai i30",
+        "fuel": "Hybrid-Benzin",
+        "ps": 160,
+        "real_l100": 6.54,
+        "n": 40
+      },
+      {
+        "match": "hyundai i40",
+        "fuel": "Benzin",
+        "ps": 165,
+        "real_l100": 8.74,
+        "n": 18
+      },
+      {
+        "match": "kia cee'd",
+        "fuel": "Benzin",
+        "ps": 140,
+        "real_l100": 7.1,
+        "n": 309
+      },
+      {
+        "match": "kia optima",
+        "fuel": "Benzin",
+        "ps": 245,
+        "real_l100": 9.16,
+        "n": 20
+      },
+      {
+        "match": "opel astra",
+        "fuel": "Benzin",
+        "ps": 145,
+        "real_l100": 6.66,
+        "n": 195
+      },
+      {
+        "match": "opel astra",
+        "fuel": "Benzin",
+        "ps": 150,
+        "real_l100": 7.07,
+        "n": 513
+      },
+      {
+        "match": "opel insignia",
+        "fuel": "Benzin",
+        "ps": 165,
+        "real_l100": 8.13,
+        "n": 143
+      },
+      {
+        "match": "opel insignia",
+        "fuel": "Benzin",
+        "ps": 260,
+        "real_l100": 9.95,
+        "n": 50
+      },
+      {
+        "match": "renault megane",
+        "fuel": "Benzin",
+        "ps": 140,
+        "real_l100": 6.66,
+        "n": 31
+      },
+      {
+        "match": "renault megane",
+        "fuel": "Benzin",
+        "ps": 159,
+        "real_l100": 7.2,
+        "n": 30
+      },
+      {
+        "match": "renault talisman",
+        "fuel": "Benzin",
+        "ps": 200,
+        "real_l100": 8.15,
+        "n": 38
+      },
+      {
+        "match": "seat leon",
+        "fuel": "Benzin",
+        "ps": 150,
+        "real_l100": 6.58,
+        "n": 438
+      },
+      {
+        "match": "seat leon",
+        "fuel": "Benzin",
+        "ps": 179,
+        "real_l100": 7.61,
+        "n": 122
+      },
+      {
+        "match": "seat leon",
+        "fuel": "Hybrid-Benzin",
+        "ps": 204,
+        "real_l100": 3.53,
+        "n": 58,
+        "phev": true
+      },
+      {
+        "match": "skoda octavia",
+        "fuel": "Benzin",
+        "ps": 150,
+        "real_l100": 6.47,
+        "n": 720
+      },
+      {
+        "match": "skoda octavia",
+        "fuel": "Benzin",
+        "ps": 179,
+        "real_l100": 7.55,
+        "n": 91
+      },
+      {
+        "match": "skoda superb",
+        "fuel": "Benzin",
+        "ps": 150,
+        "real_l100": 7.15,
+        "n": 92
+      },
+      {
+        "match": "skoda superb",
+        "fuel": "Hybrid-Benzin",
+        "ps": 218,
+        "real_l100": 4.48,
+        "n": 149,
+        "phev": true
+      },
+      {
+        "match": "volkswagen golf",
+        "fuel": "Benzin",
+        "ps": 150,
+        "real_l100": 6.66,
+        "n": 766
+      },
+      {
+        "match": "volkswagen passat",
+        "fuel": "Benzin",
+        "ps": 150,
+        "real_l100": 6.7,
+        "n": 154
+      }
+    ]
+  },
+  "model_typklassen": {
+    "_comment": "GDV insurance Typklassen (KH=Haftpflicht 10-25, VK=Vollkasko 10-34, TK=Teilkasko 10-33; lower=cheaper), looked up per HSN/TSN on the official https://www.dieversicherer.de/typklassen, status 08.04.2026. INFORMATIONAL ONLY - NOT scored yet, deliberately: coverage is 7 of 29 catalogue variants, and mixing Typklassen-based insurance for some cars with the segment+PS estimate for the rest would make the DIFFERENCES between cars partly an artefact of which model was applied. Score it only once every variant is covered. Two findings already recorded here: (1) within one model, power really does raise the class (Insignia 165->260 PS: KH 16->19, VK 22->25), so tco.insurance's PS surcharge is directionally sound; (2) model identity matters just as much as segment - Octavia and Focus are both 'compact' 150 PS and both get 550 EUR in our model, yet Octavia is VK 16/TK 18 vs Focus VK 20/TK 23, and the Astra has the highest KH (18) of all our compacts. So the segment split understates real spread. See README 'Planned data upgrades'.",
+    "entries": [
+      {
+        "match": "skoda octavia",
+        "ps": 150,
+        "hsn": "8004",
+        "tsn": "ASY",
+        "desc": "OCTAVIA COMBI 1.5 TSI, Kombi, 110 kW, 1498 ccm, ab 2017",
+        "kh": 15,
+        "vk": 16,
+        "tk": 18
+      },
+      {
+        "match": "ford focus",
+        "ps": 150,
+        "hsn": "8566",
+        "tsn": "BQN",
+        "desc": "FOCUS TURNIER 1.5, Kombi, 111 kW, 1496 ccm, ab 2018",
+        "kh": 15,
+        "vk": 20,
+        "tk": 23
+      },
+      {
+        "match": "ford focus",
+        "ps": 155,
+        "hsn": "8566",
+        "tsn": "BUE",
+        "desc": "FOCUS TURNIER M-HYBRID 1.0, Kombi, 114 kW, 999 ccm, ab 2020",
+        "kh": 15,
+        "vk": 20,
+        "tk": 23
+      },
+      {
+        "match": "opel astra",
+        "ps": 150,
+        "hsn": "1844",
+        "tsn": "AEU",
+        "desc": "ASTRA-K SPORTS TOURER 1.4, Kombi, 110 kW, 1399 ccm, ab 2017",
+        "kh": 18,
+        "vk": 19,
+        "tk": 19
+      },
+      {
+        "match": "opel insignia",
+        "ps": 165,
+        "hsn": "0035",
+        "tsn": "BKU",
+        "desc": "INSIGNIA-B SPORTS TOURER 1.5, Kombi, 121 kW, 1490 ccm, ab 2017",
+        "kh": 16,
+        "vk": 22,
+        "tk": 23
+      },
+      {
+        "match": "opel insignia",
+        "ps": 260,
+        "hsn": "1844",
+        "tsn": "AAJ",
+        "desc": "INSIGNIA-B SPORTS TOURER 2.0 4X4, Kombi, 191 kW, 1998 ccm, ab 2017",
+        "kh": 19,
+        "vk": 25,
+        "tk": 25
+      },
+      {
+        "match": "kia optima",
+        "ps": 245,
+        "hsn": "8253",
+        "tsn": "AGT",
+        "desc": "OPTIMA SW 2.0, Kombi, 180 kW, 1998 ccm, ab 2016",
+        "kh": 17,
+        "vk": 19,
+        "tk": 22
+      }
+    ]
+  }
+}

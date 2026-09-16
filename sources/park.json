@@ -1,0 +1,440 @@
+[
+  {
+    "id": "460790418",
+    "price_eur": 11900,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460809392",
+    "price_eur": 14890,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460890937",
+    "price_eur": 13999,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460895187",
+    "price_eur": 14490,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "461002791",
+    "price_eur": 14999,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460919780",
+    "price_eur": 14990,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460722224",
+    "price_eur": 14999,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460722509",
+    "price_eur": 12499,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460728212",
+    "price_eur": 10950,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460728789",
+    "price_eur": 11990,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460733695",
+    "price_eur": 12990,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460739573",
+    "price_eur": 13990,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "423600095",
+    "price_eur": 13500,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "454726764",
+    "price_eur": 13999,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "455713910",
+    "price_eur": 13980,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "448823666",
+    "price_eur": 12580,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "457906415",
+    "price_eur": 11480,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "458309934",
+    "price_eur": 11999,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "458400415",
+    "price_eur": 14999,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "458572410",
+    "price_eur": 14480,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "454578980",
+    "price_eur": 14890,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "459141043",
+    "price_eur": 14290,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "458429799",
+    "price_eur": 12500,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "458800744",
+    "price_eur": 13690,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "456958683",
+    "price_eur": 10999,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "449015400",
+    "price_eur": 14790,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "458417200",
+    "price_eur": 9900,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "459982556",
+    "price_eur": 13790,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "460040594",
+    "price_eur": 14770,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460066134",
+    "price_eur": 11997,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460066738",
+    "price_eur": 12900,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "457158051",
+    "price_eur": 13980,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "460116251",
+    "price_eur": 14940,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460117858",
+    "price_eur": 10990,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460121903",
+    "price_eur": 14990,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460147837",
+    "price_eur": 14299,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460157729",
+    "price_eur": 12990,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460212418",
+    "price_eur": 11769,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "458266833",
+    "price_eur": 14590,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460251568",
+    "price_eur": 12950,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460321655",
+    "price_eur": 13990,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "455783502",
+    "price_eur": 14690,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460395488",
+    "price_eur": 14390,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "459671536",
+    "price_eur": 11997,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460514324",
+    "price_eur": 14690,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460651758",
+    "price_eur": 13990,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "384349855",
+    "price_eur": 14399,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460209146",
+    "price_eur": 12450,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "457131397",
+    "price_eur": 14300,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460695606",
+    "price_eur": 14990,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460151209",
+    "price_eur": 14950,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460276470",
+    "price_eur": 12990,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "454654734",
+    "price_eur": 14999,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "460339768",
+    "price_eur": 11550,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "448563801",
+    "price_eur": 14900,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460532106",
+    "price_eur": 13990,
+    "price_rating": "fair",
+    "available": true
+  },
+  {
+    "id": "460544022",
+    "price_eur": 14990,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460583296",
+    "price_eur": 14950,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "460152834",
+    "price_eur": 13500,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "455281247",
+    "price_eur": 9490,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "460041293",
+    "price_eur": 12990,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "459576770",
+    "price_eur": 14690,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "459927081",
+    "price_eur": 13999,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "459605863",
+    "price_eur": 15000,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "457837536",
+    "price_eur": 14499,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "458421873",
+    "price_eur": 13999,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "459081695",
+    "price_eur": 12690,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "459541790",
+    "price_eur": 13499,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "455895470",
+    "price_eur": 11500,
+    "price_rating": null,
+    "available": false
+  },
+  {
+    "id": "425098143",
+    "price_eur": 14490,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "459259651",
+    "price_eur": 14390,
+    "price_rating": "gut",
+    "available": true
+  },
+  {
+    "id": "459448651",
+    "price_eur": 11990,
+    "price_rating": "sehr_gut",
+    "available": true
+  },
+  {
+    "id": "459566424",
+    "price_eur": 14700,
+    "price_rating": "gut",
+    "available": true
+  }
+]

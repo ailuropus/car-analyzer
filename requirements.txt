@@ -1,0 +1,10 @@
+# Optional tooling. The carcache.py CLI core needs NONE of these (stdlib only).
+# extract.py (PDF text-layer extraction) needs pypdf; the test suite needs pytest;
+# review.py (Claude API listing review) needs anthropic.
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+pypdf>=4.0
+pytest>=8.0
+anthropic>=0.60
+# cryptography lets pypdf open the DRM-encrypted TÜV-Report PDF (AES) that
+# sources/extract_tuv.py reads. Not needed by the core pipeline or the mobile.de PDFs.
+cryptography>=3.1

@@ -1,0 +1,44 @@
+{
+  "findings": [
+    {
+      "severity": "major",
+      "category": "accident",
+      "summary": "Seller states the car was hit on the right rear side panel, contradicting the structured 'Unfallfrei' field which claims accident-free.",
+      "evidence": "AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER"
+    },
+    {
+      "severity": "note",
+      "category": "usage",
+      "summary": "Mileage of 85,800 km on a vehicle first registered 07/2024 is high for the age (~43,000 km/year), suggesting intensive or commercial use.",
+      "evidence": "Kilometerstand 85.800 km / Erstzulassung 07/2024"
+    }
+  ],
+  "notable_options": [
+    "Adaptive cruise control (Abstandstempomat/ACC)",
+    "LED headlights",
+    "Front and rear parking sensors with reversing camera",
+    "Heated steering wheel",
+    "Heated seats",
+    "Keyless entry/start",
+    "Navigation system with Ford SYNC 4",
+    "Winter package",
+    "Heated windscreen",
+    "Privacy glass (tinted rear windows)",
+    "Mild-hybrid 1.0 EcoBoost drivetrain",
+    "Sport suspension and sport seats (ST-Line)",
+    "Sound system"
+  ],
+  "summary": "A 2024 Ford Focus Turnier ST-Line mild-hybrid estate with one owner and 85,800 km. The key issue is that the seller openly discloses accident damage to the right rear side panel, which contradicts the 'Unfallfrei' box in the structured data.",
+  "listing_id": "460583296",
+  "model": "claude-opus-4-8",
+  "effort": "high",
+  "source": "text",
+  "prompt_sha": "3428677f",
+  "reviewed_at_utc": "2026-07-15T15:22:02+00:00",
+  "usage": {
+    "input": 8250,
+    "output": 846,
+    "usd": 0.0624
+  },
+  "raw_text": "{\"findings\":[{\"severity\":\"major\",\"category\":\"accident\",\"summary\":\"Seller states the car was hit on the right rear side panel, contradicting the structured 'Unfallfrei' field which claims accident-free.\",\"evidence\":\"AM SEITENTEIL HINTEN RECHTS ANGEFAHREN SIEHE BILDER\"},{\"severity\":\"note\",\"category\":\"usage\",\"summary\":\"Mileage of 85,800 km on a vehicle first registered 07/2024 is high for the age (~43,000 km/year), suggesting intensive or commercial use.\",\"evidence\":\"Kilometerstand 85.800 km / Erstzulassung 07/2024\"}],\"notable_options\":[\"Adaptive cruise control (Abstandstempomat/ACC)\",\"LED headlights\",\"Front and rear parking sensors with reversing camera\",\"Heated steering wheel\",\"Heated seats\",\"Keyless entry/start\",\"Navigation system with Ford SYNC 4\",\"Winter package\",\"Heated windscreen\",\"Privacy glass (tinted rear windows)\",\"Mild-hybrid 1.0 EcoBoost drivetrain\",\"Sport suspension and sport seats (ST-Line)\",\"Sound system\"],\"summary\":\"A 2024 Ford Focus Turnier ST-Line mild-hybrid estate with one owner and 85,800 km. The key issue is that the seller openly discloses accident damage to the right rear side panel, which contradicts the 'Unfallfrei' box in the structured data.\"}"
+}
